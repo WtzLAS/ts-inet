@@ -17,8 +17,8 @@ export function is_name(a: Agent): boolean {
 export type RuleFn = (machine: Machine, lhs: Normal, rhs: Normal) => void;
 
 export class Machine {
-    eqs: [Agent, Agent][];
-    rules: Map<string, RuleFn>;
+    private eqs: [Agent, Agent][];
+    private rules: Map<string, RuleFn>;
 
     public constructor() {
         this.eqs = [];
@@ -35,7 +35,7 @@ export class Machine {
     }
 
     public add_rule(id_lhs: number, id_rhs: number, rule: RuleFn) {
-        if (this.rules.has([id_lhs, id_rhs].toString()) || this.rules.has([id_rhs, id_lhs].toString())) {
+        if (this.rules.has([id_lhs, id_rhs].toString())) {
             throw new Error("duplicate rule");
         }
         this.rules.set([id_lhs, id_rhs].toString(), rule);
