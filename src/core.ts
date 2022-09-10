@@ -10,7 +10,7 @@ export function new_agent(id: number, ports: Agent[]): Agent {
     return { id, ports };
 }
 
-export function is_name(a: Agent): boolean {
+export function is_name(a: Agent): a is Name {
     return "port" in a;
 }
 
@@ -26,7 +26,7 @@ export class Machine {
     }
 
     public add_eq(lhs: Agent, rhs: Agent) {
-        if (!("port" in lhs) && !("port" in rhs) && lhs.ports[0] != rhs.ports[0]) {
+        if (!is_name(lhs) && !is_name(rhs) && lhs.ports[0] != rhs.ports[0]) {
             // if lhs and rhs are both Normal
             // their principal ports must match
             throw new Error("invalid eq");
@@ -53,7 +53,7 @@ export class Machine {
                 break;
             }
             let [lhs, rhs] = eq;
-            if ("port" in rhs) {
+            if (is_name(rhs)) {
                 // rhs is Name
                 if (rhs.port == null) {
                     rhs.port = lhs;
@@ -61,7 +61,7 @@ export class Machine {
                     this.eqs.push([lhs, rhs.port]);
                 }
                 op_name++;
-            } else if ("port" in lhs) {
+            } else if (is_name(lhs)) {
                 // lhs is Name
                 if (lhs.port == null) {
                     lhs.port = rhs;

@@ -1,4 +1,4 @@
-import { Agent, Machine, new_agent, new_name } from "./core";
+import { Agent, is_name, Machine, new_agent, new_name } from "./core";
 
 const Z_ID = 0;
 const S_ID = 1;
@@ -40,7 +40,7 @@ console.log(machine.run());
 let tmp = 0;
 
 while (true) {
-    if ("port" in o) {
+    if (is_name(o)) {
         if (o.port == null) {
             throw new Error("inconsistent state");
         } else {
