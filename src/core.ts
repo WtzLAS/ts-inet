@@ -10,6 +10,10 @@ export function new_agent(id: number, ports: Agent[]): Agent {
     return { id, ports };
 }
 
+export function is_name(a: Agent): boolean {
+    return "port" in a;
+}
+
 export type RuleFn = (machine: Machine, lhs: Normal, rhs: Normal) => void;
 
 export class Machine {
@@ -22,6 +26,9 @@ export class Machine {
     }
 
     public add_eq(lhs: Agent, rhs: Agent) {
+        if (!("port" in lhs) && !("port" in rhs) && lhs.ports[0] != rhs.ports[0]) {
+            throw new Error("invalid eq");
+        }
         this.eqs.push([lhs, rhs]);
     }
 
