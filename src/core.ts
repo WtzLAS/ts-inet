@@ -27,6 +27,8 @@ export class Machine {
 
     public add_eq(lhs: Agent, rhs: Agent) {
         if (!("port" in lhs) && !("port" in rhs) && lhs.ports[0] != rhs.ports[0]) {
+            // if lhs and rhs are both Normal
+            // their principal ports must match
             throw new Error("invalid eq");
         }
         this.eqs.push([lhs, rhs]);
