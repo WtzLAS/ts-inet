@@ -39,22 +39,19 @@ export class Machine {
             throw new Error("duplicate rule");
         }
         this.rules.set([id_lhs, id_rhs].toString(), rule);
-        this.rules.set([id_rhs, id_lhs].toString(), function (m, l, r) {
-            rule(m, r, l)
-        });
+        if (id_lhs != id_rhs) {
+            this.rules.set([id_rhs, id_lhs].toString(), function (m, l, r) {
+                rule(m, r, l)
+            });
+        }
     }
 
     public run(): [number, number] {
         let op_interaction = 0;
         let op_name = 0;
-        while (true) {
-            let eq = this.eqs.pop();
-            if (eq == undefined) {
-                break;
-            }
+        for (let eq = this.eqs.pop(); eq != undefined; eq = this.eqs.pop()) {
             let [lhs, rhs] = eq;
             if (is_name(rhs)) {
-                // rhs is Name
                 if (rhs.port == null) {
                     rhs.port = lhs;
                 } else {
@@ -62,7 +59,6 @@ export class Machine {
                 }
                 op_name++;
             } else if (is_name(lhs)) {
-                // lhs is Name
                 if (lhs.port == null) {
                     lhs.port = rhs;
                 } else {
@@ -70,7 +66,6 @@ export class Machine {
                 }
                 op_name++;
             } else {
-                // lhs & rhs are Normal
                 let rule = this.rules.get([lhs.id, rhs.id].toString());
                 if (rule == undefined) {
                     throw new Error("no rule");
